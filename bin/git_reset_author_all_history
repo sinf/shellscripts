@@ -1,0 +1,1 @@
+read -p 'are you sure? [Y/n] ' x && [ yY = yY ] && git rebase -r --root --exec 'git commit --amend --no-edit --reset-author'
