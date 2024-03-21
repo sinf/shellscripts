@@ -1,0 +1,123 @@
+
+export PYTHONSTARTUP=~/.pythonstartup
+export LANGUAGE=en_US.UTF-8
+export MAKEFLAGS=-j8
+export LC_ALL=en_US.UTF-8
+export LC_TIME=fi_FI.UTF-8
+export EDITOR=/usr/bin/vim
+export VISUAL=/usr/bin/vim
+export force_color_prompt=yes
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export SOME_USER_AGENT='Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1'
+
+if [ -d /opt/android-sdk ]; then
+	export ANDROID_NDK_HOME=/opt/android-ndk
+	export ANDROID_HOME=/opt/android-sdk
+	export ANDROID_SDK_ROOT=/opt/android-sdk
+	export ANDROID_EMULATOR_HOME="$HOME/.android/"
+	export ANDROID_AVD_HOME="$HOME/.android/avd/"
+fi
+
+PATH=~/.local/bin
+PATH+=:~/bin
+PATH+=:~/.cargo/bin
+PATH+=:~/.dotnet/tools
+
+if [ -d /opt/android-sdk ]; then
+	PATH+=:/opt/android-ndk
+	PATH+=:/opt/android-sdk/emulator
+	PATH+=:/opt/android-sdk/platform-tools
+	PATH+=:/opt/android-sdk/tools
+	PATH+=:/opt/android-sdk/tools/bin
+fi
+if [ -d /opt/cuda ]; then
+	PATH+=:/opt/cuda/bin
+	PATH+=:/opt/cuda/nsight_compute
+	PATH+=:/opt/cuda/nsight_systems/bin
+fi
+PATH+=:/opt/vogl
+PATH+=:/usr/local/sbin
+PATH+=:/usr/local/bin
+PATH+=:/var/lib/flatpak/exports/bin
+PATH+=:/usr/lib/jvm/default/bin
+PATH+=:/usr/bin/site_perl
+PATH+=:/usr/bin/vendor_perl
+PATH+=:/usr/bin/core_perl
+PATH+=:/usr/bin
+export PATH
+
+alias ls="ls --color=always"
+alias ll="ls -l --time-style=long-iso --color=always --author -b -A"
+alias readelf="readelf --wide"
+alias objdump="objdump --wide"
+alias hiber="sudo systemctl hibernate"
+alias xxclip='xclip -selection clipboard'
+alias gits='git status'
+alias gitdc='git diff --cached'
+alias stripcolors="sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'"
+alias screen-ttyUSB0='screen -L -Logfile /tmp/screen-ttyUSB0.log -f /dev/ttyUSB0 115200,cs8,-istrip,ixoff,ixon'
+alias screen-ttyUSB0-rpi='screen -L -Logfile /tmp/screen-ttyUSB0.log -f /dev/ttyUSB0 9600,cs8,-istrip,ixoff,ixon'
+alias dxf-to-svg='python3 /usr/share/inkscape/extensions/dxf_input.py'
+alias ffmpeg='nice -n 19 ffmpeg'
+alias cmake='nice -n 19 cmake'
+alias make='nice -n 19 make'
+alias cargo='nice -n 19 cargo'
+alias npm='nice -n 19 npm'
+alias lsblk2='lsblk -o NAME,ROTA,LABEL,FSTYPE,FSVER,UUID,FSSIZE,FSAVAIL,MODEL,MOUNTPOINTS'
+alias grep=rg
+alias flatseal="flatpak run com.github.tchx84.Flatseal"
+
+filemgr() {
+	for prog in dolphin nautilus thunar caja pcmanfm konqueror; do
+		if which $prog >/dev/null 2>&1; then
+			nohup $prog "$*" >/dev/null 2>&1 &
+			break
+		fi
+	done
+}
+
+list_installed_fonts() {
+	fc-list -f "%-60{{%{family[0]}%{:style[0]=}}}%{file}\n" | sort | less
+}
+
+# list which objects are large
+git_bloat() {
+	git rev-list master | while read rev; do git ls-tree -lr $rev | cut -c54- | sed -r 's/^ +//g;'; done | sort -u | sort -rnk1 | head -n 20
+}
+
+reset_git_author_warning_bad() {
+	read -p "Enter name: " author
+	read -p "Enter email: " email
+	echo "Committer and author will be set to \"$author\""
+	echo "Email will be set to \"$email\""
+	read -p "Reset author+email? <Y/n> " prompt
+	if [[ $prompt == "Y" ]]
+	then
+		git filter-branch --env-filter "
+export GIT_COMMITTER_NAME=\"$author\"
+export GIT_COMMITTER_EMAIL=\"$email\"
+export GIT_AUTHOR_NAME=\"$author\"
+export GIT_AUTHOR_EMAIL=\"$email\"
+" --tag-name-filter cat -- --branches --tags
+	fi
+}
+
+count_file_ext_r() {
+	find . -type f | sed -e 's/.*\.//' | sed -e 's/.*\///' | sort | uniq -c | sort -rn
+}
+
+nh() {
+	_prog="$1"
+	shift
+	nohup $* >/dev/null 2>&1 &
+	unset _prog
+}
+
+nokular() {
+	nohup okular "$*" >/dev/null 2>&1 &
+}
+
+pandocM() {
+	(set -x -e; pandoc -V geometry:margin=1in $1 -o ${1%%.md}.pdf)
+}
+
