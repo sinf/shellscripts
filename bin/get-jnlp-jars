@@ -1,0 +1,6 @@
+#!/bin/sh
+# Parameters: .jnlp filename
+# Downloads all related .jar files
+url=`grep codebase "$1"|sed 's_^.*codebase="\([^"]\+\)".*$_\1_'`
+grep '<jar' "$1"|sed 's_^.*href="\([^"]\+\)".*$_'"$url"'/\1_'|xargs wget
+

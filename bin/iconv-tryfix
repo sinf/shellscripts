@@ -1,0 +1,13 @@
+#!/bin/sh
+# input text is utf8 text which was converted to utf8 incorrectly from another encoding
+# convert to utf32 so variable-length codepoints revert to the original data
+for e in $(iconv -l); do
+	s=$(dd status=none if="$1" bs=32 count=1)
+	x=$(echo -n $s | iconv -f utf8 -t utf32 | iconv -f "$e" -t utf-8 2>&1)
+	if [ ! -z "$x" ] && [ ! "$x" = 'iconv: illegal input sequence at position 0' ]
+	then
+		printf "%20s: %s\n" "$e" "$x"
+	fi
+done
+exit
+

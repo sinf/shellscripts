@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+pf="/proc/$1/status"
+if [ ! -e "$pf" ]; then
+	echo "Process doesnt exist"
+	exit 1
+fi
+
+date
+echo monitoring $pf
+
+while [ -e $pf ]; do
+	sleep 1
+done
+
+echo "process done, shutdown in 5 minutes (CTRL-C to cancel)"
+date
+sleep 300
+poweroff
+
