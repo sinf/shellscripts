@@ -7,3 +7,6 @@ defscrollback 10000
 
 escape ^Oo
 
+# unbind lock with password
+bind ^Ox
+
