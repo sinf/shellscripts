@@ -1,2 +1,2 @@
 # shellscripts
-shell scripts by me for me
+shell scripts collected or made by me for me
