@@ -1,0 +1,4 @@
+#!/bin/sh
+set -xe
+pandoc -V geometry:margin=1in $1 -o ${1%%.md}.pdf
+

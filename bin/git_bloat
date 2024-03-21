@@ -1,0 +1,4 @@
+#!/bin/sh
+# list which objects are large
+git rev-list master | while read rev; do git ls-tree -lr $rev | cut -c54- | sed -r 's/^ +//g;'; done | sort -u | sort -rnk1 | head -n 20
+

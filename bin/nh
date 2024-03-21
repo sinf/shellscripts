@@ -1,0 +1,5 @@
+#!/bin/sh
+prog="$1"
+shift
+nohup $1 $* >/dev/null 2>&1 &
+

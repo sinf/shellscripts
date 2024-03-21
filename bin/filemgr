@@ -1,0 +1,12 @@
+#!/bin/sh
+
+for prog in dolphin nautilus thunar caja pcmanfm konqueror; do
+	if which $prog >/dev/null 2>&1; then
+		nohup $prog "$*" >/dev/null 2>&1 &
+		exit 0
+	fi
+done
+
+echo "File manager GUI not found?"
+exit 1
+

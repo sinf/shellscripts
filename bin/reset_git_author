@@ -1,0 +1,17 @@
+#!/bin/sh
+
+read -p "Enter name: " author
+read -p "Enter email: " email
+echo "Committer and author will be set to \"$author\""
+echo "Email will be set to \"$email\""
+read -p "Reset author+email? <Y/n> " prompt
+if [[ $prompt == "Y" ]]
+then
+	git filter-branch --env-filter "
+export GIT_COMMITTER_NAME=\"$author\"
+export GIT_COMMITTER_EMAIL=\"$email\"
+export GIT_AUTHOR_NAME=\"$author\"
+export GIT_AUTHOR_EMAIL=\"$email\"
+" --tag-name-filter cat -- --branches --tags
+fi
+

@@ -66,58 +66,5 @@ alias npm='nice -n 19 npm'
 alias lsblk2='lsblk -o NAME,ROTA,LABEL,FSTYPE,FSVER,UUID,FSSIZE,FSAVAIL,MODEL,MOUNTPOINTS'
 alias grep=rg
 alias flatseal="flatpak run com.github.tchx84.Flatseal"
-
-filemgr() {
-	for prog in dolphin nautilus thunar caja pcmanfm konqueror; do
-		if which $prog >/dev/null 2>&1; then
-			nohup $prog "$*" >/dev/null 2>&1 &
-			break
-		fi
-	done
-}
-
-list_installed_fonts() {
-	fc-list -f "%-60{{%{family[0]}%{:style[0]=}}}%{file}\n" | sort | less
-}
-
-# list which objects are large
-git_bloat() {
-	git rev-list master | while read rev; do git ls-tree -lr $rev | cut -c54- | sed -r 's/^ +//g;'; done | sort -u | sort -rnk1 | head -n 20
-}
-
-reset_git_author_warning_bad() {
-	read -p "Enter name: " author
-	read -p "Enter email: " email
-	echo "Committer and author will be set to \"$author\""
-	echo "Email will be set to \"$email\""
-	read -p "Reset author+email? <Y/n> " prompt
-	if [[ $prompt == "Y" ]]
-	then
-		git filter-branch --env-filter "
-export GIT_COMMITTER_NAME=\"$author\"
-export GIT_COMMITTER_EMAIL=\"$email\"
-export GIT_AUTHOR_NAME=\"$author\"
-export GIT_AUTHOR_EMAIL=\"$email\"
-" --tag-name-filter cat -- --branches --tags
-	fi
-}
-
-count_file_ext_r() {
-	find . -type f | sed -e 's/.*\.//' | sed -e 's/.*\///' | sort | uniq -c | sort -rn
-}
-
-nh() {
-	_prog="$1"
-	shift
-	nohup $* >/dev/null 2>&1 &
-	unset _prog
-}
-
-nokular() {
-	nohup okular "$*" >/dev/null 2>&1 &
-}
-
-pandocM() {
-	(set -x -e; pandoc -V geometry:margin=1in $1 -o ${1%%.md}.pdf)
-}
+alias nokular='nh okular'
 

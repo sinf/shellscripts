@@ -1,0 +1,2 @@
+#!/bin/sh
+fc-list -f "%-60{{%{family[0]}%{:style[0]=}}}%{file}\n" | sort | less
