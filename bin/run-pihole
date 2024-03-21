@@ -1,0 +1,22 @@
+#!/bin/sh
+myip=######################
+mkdir -pv etc-pihole etc-dnsmasq.d
+podman run \
+--dns=8.8.8.8 \
+--dns=8.8.4.4 \
+--dns=2001:4860:4860::8888 \
+--dns=2001:4860:4860::8844 \
+-d \
+-e TZ=Europe/Helsinki \
+-e WEBPASSWORD='####################' \
+-p $myip:53:53/tcp \
+-p $myip:53:53/udp \
+-p $myip:3380:80/tcp \
+--pull=missing \
+--rm \
+-v=./etc-pihole:/etc/pihole \
+-v=./etc-dnsmasq.d:/etc/dnsmasq.d \
+--cap-add=NET_ADMIN \
+--name=pihole5 \
+pihole/pihole:latest
+
