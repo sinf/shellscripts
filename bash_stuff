@@ -1,0 +1,31 @@
+
+# colllection of generic bash utils for everyone
+
+# print wide by default
+alias readelf="readelf --wide"
+alias objdump="objdump --wide"
+
+alias hiber="sudo systemctl hibernate"
+
+# forgot what this is for
+force_color_prompt=yes
+
+list_installed_fonts() {
+	fc-list -f "%-60{{%{family[0]}%{:style[0]=}}}%{file}\n" | sort | less
+}
+
+# list which objects are large
+git_bloat() {
+	git rev-list master | while read rev; do git ls-tree -lr $rev | cut -c54- | sed -r 's/^ +//g;'; done | sort -u | sort -rnk1 | head -n 20
+}
+
+# filemgr: because idiots call the graphical file manager a random different thing in each distro
+filemgr() {
+	for xxx in dolphin thunar caja; do
+		if which $xxx >/dev/null; then
+			nohup $xxx "$*" >/dev/null 2>&1 &
+			break
+		fi
+	done
+}
+
