@@ -1,0 +1,10 @@
+#!/bin/sh
+dd if=/dev/zero bs=16M | openssl enc -aes-256-ctr -pass pass:"$(dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64)" -nosalt
+
+exit
+
+# copy from https://jrs-s.net/2017/03/15/zfs-clones-probably-not-what-you-really-want/
+# dd if=/dev/zero bs=16M count=16 | openssl enc -aes-256-ctr -pass pass:"$(dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64)" -nosalt | pv > /banshee/demo/
+
+#I know this looks a little weird, but AES-256 is roughly an order of magnitude faster than /dev/urandom: so what I did here was use /dev/urandom to seed AES-256, then encrypt a 256MB chunk of /dev/zero with it. At the end of this procedure, we have a dataset with 256MB of data in it:
+
